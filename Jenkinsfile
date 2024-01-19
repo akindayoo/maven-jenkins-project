@@ -3,14 +3,14 @@ pipeline {
 
     tools {
         maven "MAVEN3"
-        jdk "oracleJDK8"
+        jdk "oracleJDK11"
     }
 
     environment {
-        awsEcrCreds = 'ecr:eu-west-2:JenkinsAWSCLI'
-        awsEcrRegistry =  "392102158411.dkr.ecr.eu-west-2.amazonaws.com/devopsacad-d-image"
-        devopsacadEcrImgReg = "https://392102158411.dkr.ecr.eu-west-2.amazonaws.com"
-        awsRegion = 'eu-west-2'
+        awsEcrCreds = 'ecr:us-east-1:JenkinsAWSCLI'
+        awsEcrRegistry =  "509085657504.dkr.ecr.us-east-1.amazonaws.com/devopsacad-d-image"
+        devopsacadEcrImgReg = "https://509085657504.dkr.ecr.us-east-1.amazonaws.com"
+        awsRegion = 'us-east-1'
         cluster = 'webapp'
         service = 'webapp-svc'
     }
@@ -20,7 +20,7 @@ pipeline {
             steps {
                 script {
                     echo "Pull Source code from Git"
-                    git branch: 'docker', url: 'https://github.com/seunayolu/maven-jenkins-project.git'
+                    git branch: 'docker', url: 'https://github.com/akindayoo/maven-jenkins-project.git'
                 }
             }
         }
@@ -54,13 +54,13 @@ pipeline {
         }
 
         stage ('Deploy to ECS') {
-            steps {
+            steps{
                 script {
-                    withAWS(credentials: 'JenkinsAWSCLI', region: "${awsRegion}") {
+                    withAWS(credentials:'JenkinsAWSCLI', region: "${awsRegion}") {
                         sh 'aws ecs update-service --cluster ${cluster} --service ${service} --force-new-deployment'
                     }
                 }
-            }
+            } 
         }
     }
-}
+}                          
